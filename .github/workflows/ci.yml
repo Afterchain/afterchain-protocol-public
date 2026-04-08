@@ -31,3 +31,14 @@ jobs:
         run: |
           cd packages/contracts
           forge test -vvv
+
+      - name: Run coverage
+        run: |
+          cd packages/contracts
+          forge coverage --report lcov
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: packages/contracts/lcov.info
+          token: ${{ secrets.CODECOV_TOKEN }}
