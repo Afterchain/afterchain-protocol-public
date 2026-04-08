@@ -25,7 +25,7 @@ jobs:
       - name: Install forge-std
         run: |
           cd packages/contracts
-          forge install foundry-rs/forge-std --no-commit
+          forge install foundry-rs/forge-std
 
       - name: Run tests
         run: |
