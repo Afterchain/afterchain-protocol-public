@@ -1,4 +1,5 @@
 # Afterchain Protocol — Public Shell
+![Forge Tests](https://github.com/Afterchain/afterchain-protocol-public/actions/workflows/ci.yml/badge.svg)
 
 **Public review edition.** This repository contains the on-chain
 execution rail of the Afterchain Protocol and the cryptographic
