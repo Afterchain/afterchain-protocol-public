@@ -1,0 +1,280 @@
+/Users/milczarek/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+'forge clean' running (wd: /Users/milczarek/afterchain-mvp/afterchain_claude_package/afterchain-protocol-public/packages/contracts)
+'forge config --json' running
+'forge build --build-info src' running (wd: /Users/milczarek/afterchain-mvp/afterchain_claude_package/afterchain-protocol-public/packages/contracts)
+INFO:Detectors:
+Detector: incorrect-return
+Groth16VerifierCore.verifyProof(uint256[2],uint256[2][2],uint256[2],uint256[4]) (src/Groth16VerifierCore.sol#68-188) calls Groth16VerifierCore.verifyProof.asm_0.checkField() (src/Groth16VerifierCore.sol#70-75) which halt the execution return(uint256,uint256)(0,0x20) (src/Groth16VerifierCore.sol#73)
+Groth16VerifierCore.verifyProof(uint256[2],uint256[2][2],uint256[2],uint256[4]) (src/Groth16VerifierCore.sol#68-188) calls Groth16VerifierCore.verifyProof.asm_0.checkPairing() (src/Groth16VerifierCore.sol#103-166) which halt the execution return(uint256,uint256)(0,0x20) (src/Groth16VerifierCore.sol#99)
+Groth16VerifierCore.verifyProof.asm_0.checkPairing() (src/Groth16VerifierCore.sol#103-166) calls Groth16VerifierCore.verifyProof.asm_0.g1_mulAccC() (src/Groth16VerifierCore.sol#78-101) which halt the execution return(uint256,uint256)(0,0x20) (src/Groth16VerifierCore.sol#99)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-return-in-assembly
+INFO:Detectors:
+Detector: incorrect-equality
+AttestationVerifier.decodeAttestation(bytes,bytes) (src/AttestationVerifier.sol#219-238) uses a dangerous strict equality:
+	- inspection.chainMatch = inspection.decoded.chainId == block.chainid (src/AttestationVerifier.sol#228)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#dangerous-strict-equalities
+INFO:Detectors:
+Detector: reentrancy-no-eth
+Reentrancy in TransferVaultFactory.createVault(ITransferVaultFactory.VaultConfig) (src/TransferVaultFactory.sol#109-151):
+	External calls:
+	- INullifierRegistry(nullifierRegistry).authorizeVault(vault) (src/TransferVaultFactory.sol#146)
+	State variables written after the call(s):
+	- _vaultOf[config.owner] = vault (src/TransferVaultFactory.sol#148)
+	TransferVaultFactory._vaultOf (src/TransferVaultFactory.sol#65) can be used in cross function reentrancies:
+	- TransferVaultFactory.createVault(ITransferVaultFactory.VaultConfig) (src/TransferVaultFactory.sol#109-151)
+	- TransferVaultFactory.vaultOf(address) (src/TransferVaultFactory.sol#154-156)
+Reentrancy in TransferVault.execute(bytes,uint256[],bytes32,address) (src/TransferVault.sol#605-659):
+	External calls:
+	- _nullifierRegistry.spend(nullifier) (src/TransferVault.sol#649)
+	State variables written after the call(s):
+	- _state = VaultState.EXECUTED (src/TransferVault.sol#652)
+	TransferVault._state (src/TransferVault.sol#100) can be used in cross function reentrancies:
+	- TransferVault.attest(bytes) (src/TransferVault.sol#386-415)
+	- TransferVault.attestMultiSig(bytes32,bytes[],uint256) (src/TransferVault.sol#438-472)
+	- TransferVault.attestMultiSigTyped(bytes32,uint256,bytes32,bytes[],uint256) (src/TransferVault.sol#495-543)
+	- TransferVault.challengeProofOfLife() (src/TransferVault.sol#554-565)
+	- TransferVault.constructor(address,bytes32,bytes32,uint256,address[],TransferVault.Deps) (src/TransferVault.sol#299-335)
+	- TransferVault.getState() (src/TransferVault.sol#1026-1028)
+	- TransferVault.inState(ITransferVault.VaultState) (src/TransferVault.sol#349-352)
+	- TransferVault.markClaimable() (src/TransferVault.sol#570-577)
+	- TransferVault.notLocked() (src/TransferVault.sol#354-357)
+Reentrancy in TransferVault.executeWithFees(bytes,uint256[],bytes32,address,bytes,bytes[]) (src/TransferVault.sol#684-760):
+	External calls:
+	- _nullifierRegistry.spend(nullifier) (src/TransferVault.sol#750)
+	State variables written after the call(s):
+	- _state = VaultState.EXECUTED (src/TransferVault.sol#751)
+	TransferVault._state (src/TransferVault.sol#100) can be used in cross function reentrancies:
+	- TransferVault.attest(bytes) (src/TransferVault.sol#386-415)
+	- TransferVault.attestMultiSig(bytes32,bytes[],uint256) (src/TransferVault.sol#438-472)
+	- TransferVault.attestMultiSigTyped(bytes32,uint256,bytes32,bytes[],uint256) (src/TransferVault.sol#495-543)
+	- TransferVault.challengeProofOfLife() (src/TransferVault.sol#554-565)
+	- TransferVault.constructor(address,bytes32,bytes32,uint256,address[],TransferVault.Deps) (src/TransferVault.sol#299-335)
+	- TransferVault.getState() (src/TransferVault.sol#1026-1028)
+	- TransferVault.inState(ITransferVault.VaultState) (src/TransferVault.sol#349-352)
+	- TransferVault.markClaimable() (src/TransferVault.sol#570-577)
+	- TransferVault.notLocked() (src/TransferVault.sol#354-357)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-1
+INFO:Detectors:
+Detector: uninitialized-local
+TransferVault._creditAssetsWithFees(address,FeeTerms.FeeTermsPayload).fb (src/TransferVault.sol#890) is a local variable never initialized
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#uninitialized-local-variables
+INFO:Detectors:
+Detector: unused-return
+TransferVault.executeWithFees(bytes,uint256[],bytes32,address,bytes,bytes[]) (src/TransferVault.sol#684-760) ignores return value by (feeOk,None) = _feeTermsVerifier.verifyDigestMultiSig(digest,feeTermsSignatures) (src/TransferVault.sol#746)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unused-return
+INFO:Detectors:
+Detector: calls-loop
+TransferVault._creditAssets(address) (src/TransferVault.sol#1043-1059) has external calls inside a loop: bal = IERC20Minimal(_assets[i]).balanceOf(address(this)) (src/TransferVault.sol#1053)
+	Calls stack containing the loop:
+		TransferVault.execute(bytes,uint256[],bytes32,address)
+TransferVault._creditAssetsWithFees(address,FeeTerms.FeeTermsPayload) (src/TransferVault.sol#886-917) has external calls inside a loop: bal = IERC20Minimal(token).balanceOf(address(this)) (src/TransferVault.sol#914)
+	Calls stack containing the loop:
+		TransferVault.executeWithFees(bytes,uint256[],bytes32,address,bytes,bytes[])
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation/#calls-inside-a-loop
+INFO:Detectors:
+Detector: reentrancy-benign
+Reentrancy in TransferVault.execute(bytes,uint256[],bytes32,address) (src/TransferVault.sol#605-659):
+	External calls:
+	- _nullifierRegistry.spend(nullifier) (src/TransferVault.sol#649)
+	State variables written after the call(s):
+	- _creditAssets(beneficiaryDest) (src/TransferVault.sol#656)
+		- pendingEthWithdrawals[beneficiary] += ethBal (src/TransferVault.sol#1047)
+	- _creditAssets(beneficiaryDest) (src/TransferVault.sol#656)
+		- pendingTokenWithdrawals[_assets[i]][beneficiary] += bal (src/TransferVault.sol#1055)
+Reentrancy in TransferVault.executeWithFees(bytes,uint256[],bytes32,address,bytes,bytes[]) (src/TransferVault.sol#684-760):
+	External calls:
+	- _nullifierRegistry.spend(nullifier) (src/TransferVault.sol#750)
+	State variables written after the call(s):
+	- _creditAssetsWithFees(beneficiaryDest,terms) (src/TransferVault.sol#753)
+		- pendingEthWithdrawals[beneficiary] += beneficiaryCut (src/TransferVault.sol#951)
+		- pendingEthWithdrawals[fb.acRecipient] += afterchainCut (src/TransferVault.sol#955)
+		- pendingEthWithdrawals[fb.lcRecipient] += licenseeCut (src/TransferVault.sol#959)
+	- _creditAssetsWithFees(beneficiaryDest,terms) (src/TransferVault.sol#753)
+		- pendingTokenWithdrawals[asset][beneficiary] += beneficiaryCut (src/TransferVault.sol#973)
+		- pendingTokenWithdrawals[asset][fb.acRecipient] += afterchainCut (src/TransferVault.sol#977)
+		- pendingTokenWithdrawals[asset][fb.lcRecipient] += licenseeCut (src/TransferVault.sol#981)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-2
+INFO:Detectors:
+Detector: reentrancy-events
+Reentrancy in TransferVaultFactory.createVault(ITransferVaultFactory.VaultConfig) (src/TransferVaultFactory.sol#109-151):
+	External calls:
+	- INullifierRegistry(nullifierRegistry).authorizeVault(vault) (src/TransferVaultFactory.sol#146)
+	Event emitted after the call(s):
+	- VaultCreated(vault,config.owner,config.templateId) (src/TransferVaultFactory.sol#150)
+Reentrancy in AfterchainGovernance.executeAction(bytes32) (src/AfterchainGovernance.sol#177-198):
+	External calls:
+	- (ok,ret) = a.target.call(a.data) (src/AfterchainGovernance.sol#194)
+	Event emitted after the call(s):
+	- ActionExecuted(actionId,a.target,ret) (src/AfterchainGovernance.sol#197)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-3
+INFO:Detectors:
+Detector: timestamp
+AfterchainGovernance.executeAction(bytes32) (src/AfterchainGovernance.sol#177-198) uses timestamp for comparisons
+	Dangerous comparisons:
+	- block.timestamp < unlockAt (src/AfterchainGovernance.sol#181)
+AttestationVerifier.verify(bytes,bytes) (src/AttestationVerifier.sol#124-148) uses timestamp for comparisons
+	Dangerous comparisons:
+	- block.timestamp >= decoded.expiresAt (src/AttestationVerifier.sol#135)
+AttestationVerifier.verifyMultiSigForVault(bytes,bytes[]) (src/AttestationVerifier.sol#157-190) uses timestamp for comparisons
+	Dangerous comparisons:
+	- block.timestamp >= decoded.expiresAt (src/AttestationVerifier.sol#167)
+	- signer == address(0) || ! _authorizedSigners[signer] (src/AttestationVerifier.sol#175)
+	- seen[j] == signer (src/AttestationVerifier.sol#178)
+AttestationVerifier.verifyMultiSig(bytes32,bytes[]) (src/AttestationVerifier.sol#195-214) uses timestamp for comparisons
+	Dangerous comparisons:
+	- signer == address(0) || ! _authorizedSigners[signer] (src/AttestationVerifier.sol#204)
+	- seen[j] == signer (src/AttestationVerifier.sol#207)
+AttestationVerifier.decodeAttestation(bytes,bytes) (src/AttestationVerifier.sol#219-238) uses timestamp for comparisons
+	Dangerous comparisons:
+	- inspection.expired = block.timestamp >= inspection.decoded.expiresAt (src/AttestationVerifier.sol#227)
+	- inspection.chainMatch = inspection.decoded.chainId == block.chainid (src/AttestationVerifier.sol#228)
+TransferVault.attestMultiSigTyped(bytes32,uint256,bytes32,bytes[],uint256) (src/TransferVault.sol#495-543) uses timestamp for comparisons
+	Dangerous comparisons:
+	- block.timestamp > expiresAt (src/TransferVault.sol#506)
+TransferVault.challengeProofOfLife() (src/TransferVault.sol#554-565) uses timestamp for comparisons
+	Dangerous comparisons:
+	- block.timestamp > challengeWindowEnd (src/TransferVault.sol#555)
+TransferVault.markClaimable() (src/TransferVault.sol#570-577) uses timestamp for comparisons
+	Dangerous comparisons:
+	- block.timestamp <= challengeWindowEnd (src/TransferVault.sol#572)
+TransferVault.executeWithFees(bytes,uint256[],bytes32,address,bytes,bytes[]) (src/TransferVault.sol#684-760) uses timestamp for comparisons
+	Dangerous comparisons:
+	- block.timestamp >= terms.feeTermsExpiry (src/TransferVault.sol#714)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp
+INFO:Detectors:
+Detector: assembly
+AttestationVerifier._recoverSigner(bytes32,bytes) (src/AttestationVerifier.sol#303-319) uses assembly
+	- INLINE ASM (src/AttestationVerifier.sol#308-312)
+FeeTerms.hashStruct(FeeTerms.FeeTermsPayload) (src/FeeTerms.sol#132-146) uses assembly
+	- INLINE ASM (src/FeeTerms.sol#136-145)
+FeeTerms.decode(bytes) (src/FeeTerms.sol#156-161) uses assembly
+	- INLINE ASM (src/FeeTerms.sol#158-160)
+FeeTermsVerifier._recoverSigner(bytes32,bytes) (src/FeeTermsVerifier.sol#193-210) uses assembly
+	- INLINE ASM (src/FeeTermsVerifier.sol#199-203)
+Groth16VerifierCore.verifyProof(uint256[2],uint256[2][2],uint256[2],uint256[4]) (src/Groth16VerifierCore.sol#68-188) uses assembly
+	- INLINE ASM (src/Groth16VerifierCore.sol#69-187)
+Groth16VerifierCore.verifyProof.asm_0.checkField() (src/Groth16VerifierCore.sol#70-75) uses assembly
+	- INLINE ASM (src/Groth16VerifierCore.sol#70-75)
+Groth16VerifierCore.verifyProof.asm_0.g1_mulAccC() (src/Groth16VerifierCore.sol#78-101) uses assembly
+	- INLINE ASM (src/Groth16VerifierCore.sol#78-101)
+Groth16VerifierCore.verifyProof.asm_0.checkPairing() (src/Groth16VerifierCore.sol#103-166) uses assembly
+	- INLINE ASM (src/Groth16VerifierCore.sol#103-166)
+MultiSigAttestationVerifier._recoverSigner(bytes32,bytes) (src/MultiSigAttestationVerifier.sol#158-182) uses assembly
+	- INLINE ASM (src/MultiSigAttestationVerifier.sol#164-168)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#assembly-usage
+INFO:Detectors:
+Detector: pragma
+2 different versions of Solidity are used:
+	- Version constraint ^0.8.24 is used by:
+		-^0.8.24 (src/AfterchainGovernance.sol#2)
+		-^0.8.24 (src/AttestationVerifier.sol#2)
+		-^0.8.24 (src/FeeTerms.sol#2)
+		-^0.8.24 (src/FeeTermsVerifier.sol#2)
+		-^0.8.24 (src/Groth16Verifier.sol#2)
+		-^0.8.24 (src/Groth16VerifierProduction.sol#3)
+		-^0.8.24 (src/IAttestationVerifier.sol#2)
+		-^0.8.24 (src/IFeeTermsVerifier.sol#2)
+		-^0.8.24 (src/IGroth16Verifier.sol#2)
+		-^0.8.24 (src/IMultiSigAttestationVerifier.sol#2)
+		-^0.8.24 (src/INullifierRegistry.sol#2)
+		-^0.8.24 (src/ITemplateRegistry.sol#2)
+		-^0.8.24 (src/ITransferVault.sol#2)
+		-^0.8.24 (src/ITransferVaultFactory.sol#2)
+		-^0.8.24 (src/MultiSigAttestationVerifier.sol#2)
+		-^0.8.24 (src/NullifierRegistry.sol#2)
+		-^0.8.24 (src/TemplateRegistry.sol#2)
+		-^0.8.24 (src/TransferVault.sol#2)
+		-^0.8.24 (src/TransferVaultFactory.sol#2)
+	- Version constraint >=0.7.0<0.9.0 is used by:
+		->=0.7.0<0.9.0 (src/Groth16VerifierCore.sol#21)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#different-pragma-directives-are-used
+INFO:Detectors:
+Detector: costly-loop
+AfterchainGovernance.removeSigner(address) (src/AfterchainGovernance.sol#217-231) has costly operations inside a loop:
+	- _signerList.pop() (src/AfterchainGovernance.sol#226)
+AttestationVerifier.removeSigner(address) (src/AttestationVerifier.sol#257-271) has costly operations inside a loop:
+	- _signerList.pop() (src/AttestationVerifier.sol#266)
+FeeTermsVerifier.removeSigner(address) (src/FeeTermsVerifier.sol#166-180) has costly operations inside a loop:
+	- _signerList.pop() (src/FeeTermsVerifier.sol#175)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#costly-operations-inside-a-loop
+INFO:Detectors:
+Detector: cyclomatic-complexity
+TransferVault.executeWithFees(bytes,uint256[],bytes32,address,bytes,bytes[]) (src/TransferVault.sol#684-760) has a high cyclomatic complexity (12).
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#cyclomatic-complexity
+INFO:Detectors:
+Detector: solc-version
+Version constraint >=0.7.0<0.9.0 is too complex.
+It is used by:
+	- >=0.7.0<0.9.0 (src/Groth16VerifierCore.sol#21)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-versions-of-solidity
+INFO:Detectors:
+Detector: low-level-calls
+Low level call in AfterchainGovernance.executeAction(bytes32) (src/AfterchainGovernance.sol#177-198):
+	- (ok,ret) = a.target.call(a.data) (src/AfterchainGovernance.sol#194)
+Low level call in TransferVault.withdrawETH() (src/TransferVault.sol#990-1001):
+	- (ok,None) = msg.sender.call{value: amount}() (src/TransferVault.sol#997)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#low-level-calls
+INFO:Detectors:
+Detector: missing-inheritance
+Groth16VerifierCore (src/Groth16VerifierCore.sol#23-189) should inherit from IGroth16Verifier (src/IGroth16Verifier.sol#50-63)
+TemplateRegistry (src/TemplateRegistry.sol#18-138) should inherit from ITemplateRegistryFeeMode (src/TransferVault.sol#15-17)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-inheritance
+INFO:Detectors:
+Detector: naming-convention
+Variable AttestationVerifier.DOMAIN_SEPARATOR (src/AttestationVerifier.sol#41) is not in mixedCase
+Variable FeeTermsVerifier.DOMAIN_SEPARATOR (src/FeeTermsVerifier.sol#19) is not in mixedCase
+Variable FeeTermsVerifier.PROTOCOL_TREASURY (src/FeeTermsVerifier.sol#28) is not in mixedCase
+Parameter Groth16VerifierCore.verifyProof(uint256[2],uint256[2][2],uint256[2],uint256[4])._pA (src/Groth16VerifierCore.sol#68) is not in mixedCase
+Parameter Groth16VerifierCore.verifyProof(uint256[2],uint256[2][2],uint256[2],uint256[4])._pB (src/Groth16VerifierCore.sol#68) is not in mixedCase
+Parameter Groth16VerifierCore.verifyProof(uint256[2],uint256[2][2],uint256[2],uint256[4])._pC (src/Groth16VerifierCore.sol#68) is not in mixedCase
+Parameter Groth16VerifierCore.verifyProof(uint256[2],uint256[2][2],uint256[2],uint256[4])._pubSignals (src/Groth16VerifierCore.sol#68) is not in mixedCase
+Parameter Groth16VerifierCore.verifyProof.asm_0.checkField().v_verifyProof_asm_0_checkField (src/Groth16VerifierCore.sol#70) is not in mixedCase
+Function Groth16VerifierCore.verifyProof.asm_0.g1_mulAccC() (src/Groth16VerifierCore.sol#78-101) is not in mixedCase
+Parameter Groth16VerifierCore.verifyProof.asm_0.g1_mulAccC().pR_verifyProof_asm_0_g1_mulAccC (src/Groth16VerifierCore.sol#78) is not in mixedCase
+Parameter Groth16VerifierCore.verifyProof.asm_0.g1_mulAccC().x_verifyProof_asm_0_g1_mulAccC (src/Groth16VerifierCore.sol#78) is not in mixedCase
+Parameter Groth16VerifierCore.verifyProof.asm_0.g1_mulAccC().y_verifyProof_asm_0_g1_mulAccC (src/Groth16VerifierCore.sol#78) is not in mixedCase
+Parameter Groth16VerifierCore.verifyProof.asm_0.g1_mulAccC().s_verifyProof_asm_0_g1_mulAccC (src/Groth16VerifierCore.sol#78) is not in mixedCase
+Parameter Groth16VerifierCore.verifyProof.asm_0.checkPairing().pA_verifyProof_asm_0_checkPairing (src/Groth16VerifierCore.sol#103) is not in mixedCase
+Parameter Groth16VerifierCore.verifyProof.asm_0.checkPairing().pB_verifyProof_asm_0_checkPairing (src/Groth16VerifierCore.sol#103) is not in mixedCase
+Parameter Groth16VerifierCore.verifyProof.asm_0.checkPairing().pC_verifyProof_asm_0_checkPairing (src/Groth16VerifierCore.sol#103) is not in mixedCase
+Parameter Groth16VerifierCore.verifyProof.asm_0.checkPairing().pubSignals_verifyProof_asm_0_checkPairing (src/Groth16VerifierCore.sol#103) is not in mixedCase
+Parameter Groth16VerifierCore.verifyProof.asm_0.checkPairing().pMem_verifyProof_asm_0_checkPairing (src/Groth16VerifierCore.sol#103) is not in mixedCase
+Constant Groth16VerifierCore.r (src/Groth16VerifierCore.sol#25) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.q (src/Groth16VerifierCore.sol#27) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.alphax (src/Groth16VerifierCore.sol#30) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.alphay (src/Groth16VerifierCore.sol#31) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.betax1 (src/Groth16VerifierCore.sol#32) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.betax2 (src/Groth16VerifierCore.sol#33) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.betay1 (src/Groth16VerifierCore.sol#34) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.betay2 (src/Groth16VerifierCore.sol#35) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.gammax1 (src/Groth16VerifierCore.sol#36) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.gammax2 (src/Groth16VerifierCore.sol#37) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.gammay1 (src/Groth16VerifierCore.sol#38) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.gammay2 (src/Groth16VerifierCore.sol#39) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.deltax1 (src/Groth16VerifierCore.sol#40) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.deltax2 (src/Groth16VerifierCore.sol#41) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.deltay1 (src/Groth16VerifierCore.sol#42) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.deltay2 (src/Groth16VerifierCore.sol#43) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.IC0x (src/Groth16VerifierCore.sol#46) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.IC0y (src/Groth16VerifierCore.sol#47) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.IC1x (src/Groth16VerifierCore.sol#49) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.IC1y (src/Groth16VerifierCore.sol#50) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.IC2x (src/Groth16VerifierCore.sol#52) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.IC2y (src/Groth16VerifierCore.sol#53) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.IC3x (src/Groth16VerifierCore.sol#55) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.IC3y (src/Groth16VerifierCore.sol#56) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.IC4x (src/Groth16VerifierCore.sol#58) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.IC4y (src/Groth16VerifierCore.sol#59) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.pVk (src/Groth16VerifierCore.sol#63) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.pPairing (src/Groth16VerifierCore.sol#64) is not in UPPER_CASE_WITH_UNDERSCORES
+Constant Groth16VerifierCore.pLastMem (src/Groth16VerifierCore.sol#66) is not in UPPER_CASE_WITH_UNDERSCORES
+Function IFeeTermsVerifier.DOMAIN_SEPARATOR() (src/IFeeTermsVerifier.sol#46) is not in mixedCase
+Function IFeeTermsVerifier.PROTOCOL_TREASURY() (src/IFeeTermsVerifier.sol#51) is not in mixedCase
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+INFO:Detectors:
+Detector: cache-array-length
+Loop condition i < _assets.length (src/TransferVault.sol#1052) should use cached array length instead of referencing `length` member of the storage array.
+ Loop condition i < _signerList.length (src/AfterchainGovernance.sol#186) should use cached array length instead of referencing `length` member of the storage array.
+ Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#cache-array-length
+INFO:Slither:src/ analyzed (23 contracts with 100 detectors), 94 result(s) found
