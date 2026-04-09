@@ -5,8 +5,8 @@ This document explains the Slither findings for reviewers and auditors.
 ## Summary
 
 Slither v0.11.4 was run against `packages/contracts/src/` on April 9, 2026.
-102 results found across 23 contracts. The majority are false positives or
-expected patterns in ZK protocol architecture.
+102 results found in initial run. After hardening commits, reduced to 94
+results. All remaining findings are documented below.
 
 ## Category 1: False Positives & ZK-Generated Code (No Action Required)
 
