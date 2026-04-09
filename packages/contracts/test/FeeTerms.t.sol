@@ -100,7 +100,7 @@ contract FeeTermsTest is Test {
             address(nullifierReg),
             address(groth16),
             address(templateReg),
-            address(0),                     // multiSigVerifier
+            address(0xDEAD1),               // multiSigVerifier placeholder
             address(feeTermsVerifier)       // SEC-6 fee terms enforcement enabled
         );
         nullifierReg.setOperator(address(factory));

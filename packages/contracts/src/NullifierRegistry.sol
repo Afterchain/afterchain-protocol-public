@@ -86,6 +86,7 @@ contract NullifierRegistry is INullifierRegistry {
             if (msg.sender != _bootstrapDeployer) revert NotBootstrapDeployer(msg.sender);
             _operatorBootstrapSealed = true;
         }
+        require(operator_ != address(0), "NullifierRegistry: zero operator");
         _operator = operator_;
         emit OperatorSet(operator_);
     }

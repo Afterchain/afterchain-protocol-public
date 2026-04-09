@@ -102,7 +102,7 @@ contract MultiSigAttestationTest is Test {
             address(groth16),
             address(templateReg),
             address(multiSigVerifier),
-            address(0) // feeTermsVerifier — not exercised by multi-sig tests
+            address(0xDEAD2) // feeTermsVerifier placeholder — not exercised by multi-sig tests
         );
         nullifierReg.setOperator(address(factory));
         templateReg.registerTemplate(demoTemplateId, keccak256("config"));
@@ -323,39 +323,26 @@ contract MultiSigAttestationTest is Test {
         vault.attestMultiSig(payloadHash, sigs, 0);
     }
 
-    /// @dev Test 11: vault has no multiSigVerifier (factory with address(0)) → MultiSigNotConfigured.
+    /// @dev Test 11: vault has no multiSigVerifier (deps.multiSigVerifier = address(0)) → MultiSigNotConfigured.
     function test_attestMultiSig_notConfigured_reverts() public {
-        // Deploy a factory without multiSigVerifier
-        TransferVaultFactory bareFactory = new TransferVaultFactory(
-            address(attestVerifier),
-            address(nullifierReg),
-            address(groth16),
-            address(templateReg),
-            address(0), // disabled
-            address(0)  // feeTermsVerifier disabled
-        );
-        // Cannot setOperator twice on nullifierReg (already set to factory above).
-        // Deploy a fresh nullifier registry for this bare factory.
-        NullifierRegistry bareNullifierReg = new NullifierRegistry(address(this));
-        bareFactory = new TransferVaultFactory(
-            address(attestVerifier),
-            address(bareNullifierReg),
-            address(groth16),
-            address(templateReg),
-            address(0),
-            address(0)
-        );
-        bareNullifierReg.setOperator(address(bareFactory));
-
+        // Deploy a vault directly with address(0) multiSigVerifier (bypasses factory zero-check).
         address[] memory assets = new address[](0);
-        ITransferVaultFactory.VaultConfig memory cfg = ITransferVaultFactory.VaultConfig({
-            owner: address(0x5678),
-            templateId: demoTemplateId,
-            beneficiaryRoot: bytes32(FIXTURE_MERKLE_ROOT),
-            challengeWindowDuration: 1 hours,
-            assets: assets
+        TransferVault.Deps memory deps = TransferVault.Deps({
+            attestationVerifier: address(attestVerifier),
+            nullifierRegistry:   address(nullifierReg),
+            groth16Verifier:     address(groth16),
+            multiSigVerifier:    address(0),
+            feeTermsVerifier:    address(0xDEAD2),
+            templateRegistry:    address(templateReg)
         });
-        TransferVault bareVault = TransferVault(payable(bareFactory.createVault(cfg)));
+        TransferVault bareVault = new TransferVault(
+            address(0x5678),
+            demoTemplateId,
+            bytes32(FIXTURE_MERKLE_ROOT),
+            1 hours,
+            assets,
+            deps
+        );
 
         bytes32 payloadHash = keccak256("multisig-payload-noconfig");
         bytes[] memory sigs = _buildThreeSigs(payloadHash);

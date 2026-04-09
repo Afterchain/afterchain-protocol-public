@@ -55,11 +55,23 @@ intermediate division before multiplication:
 Committed: `fix: resolve divide-before-multiply precision loss in _computeCuts`
 
 **`missing-zero-check`**
-Noted. Zero-address validation on constructor parameters is scheduled for
-the next pre-audit hardening pass alongside a formal audit engagement.
+Fixed. Zero-address validation added to:
+- `TransferVault.constructor` — `owner_` parameter
+- `NullifierRegistry.setOperator` — `operator_` parameter
+- `TransferVaultFactory.constructor` — `multiSigVerifier_` and `feeTermsVerifier_` parameters
 
-**`immutable-states` / `cache-array-length`**
-Noted. Gas optimizations scheduled for pre-audit hardening pass.
+Committed: `fix: add zero-address checks and immutable declarations per Slither recommendations`
+
+**`immutable-states`**
+Fixed. The following state variables are now declared `immutable`:
+- `TransferVault.owner`
+- `TransferVault.templateId`
+- `TransferVault._challengeWindowDuration`
+
+Committed: `fix: add zero-address checks and immutable declarations per Slither recommendations`
+
+**`cache-array-length`**
+Noted. Gas optimization scheduled for pre-audit hardening pass.
 
 ## Audit Status
 

@@ -85,7 +85,7 @@ contract FeeTermsSec7Test is Test {
             address(nullifierReg),
             address(groth16),
             address(templateReg),
-            address(0),
+            address(0xDEAD1),
             address(feeTermsVerifier)
         );
         nullifierReg.setOperator(address(factory));
@@ -299,7 +299,7 @@ contract FeeTermsSec7Test is Test {
             address(freshNull),
             address(groth16),
             address(templateReg),
-            address(0),
+            address(0xDEAD1),
             address(dedicated)
         );
         freshNull.setOperator(address(fresh));

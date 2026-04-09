@@ -88,7 +88,8 @@ contract TransferVaultFactory is ITransferVaultFactory {
             groth16Verifier_ == address(0) ||
             templateRegistry_ == address(0)
         ) revert ZeroAddress();
-        // multiSigVerifier_ and feeTermsVerifier_ may be address(0) (opt-in)
+        require(multiSigVerifier_ != address(0), "TransferVaultFactory: zero multiSigVerifier");
+        require(feeTermsVerifier_ != address(0), "TransferVaultFactory: zero feeTermsVerifier");
 
         attestationVerifier = attestationVerifier_;
         nullifierRegistry = nullifierRegistry_;

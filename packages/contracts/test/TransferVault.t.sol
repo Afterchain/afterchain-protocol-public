@@ -89,8 +89,8 @@ contract TransferVaultTest is Test {
             address(nullifierReg),
             address(groth16),
             address(templateReg),
-            address(0), // multiSigVerifier disabled — existing tests use single-signer attest()
-            address(0)  // feeTermsVerifier disabled — existing tests use execute() not executeWithFees()
+            address(0xDEAD1), // multiSigVerifier placeholder — existing tests use single-signer attest()
+            address(0xDEAD2)  // feeTermsVerifier placeholder — existing tests use execute() not executeWithFees()
         );
 
         // Wire factory as nullifier registry operator

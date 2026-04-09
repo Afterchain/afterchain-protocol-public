@@ -99,11 +99,11 @@ contract TransferVault is ITransferVault, ReentrancyGuard {
 
     VaultState private _state;
 
-    address public override owner;
+    address public immutable override owner;
     bytes32 public override beneficiaryRoot;
-    bytes32 public override templateId;
+    bytes32 public immutable override templateId;
 
-    uint256 private _challengeWindowDuration;
+    uint256 private immutable _challengeWindowDuration;
     uint256 public override challengeWindowEnd;
 
     /// @notice DD Sprint G — Finding ZK: chain id captured at construction.
@@ -309,6 +309,7 @@ contract TransferVault is ITransferVault, ReentrancyGuard {
         // value cannot be a registered template, so accepting it would
         // create a vault that no executeWithFees() call can ever reach.
         if (templateId_ == bytes32(0)) revert InvalidTemplate();
+        require(owner_ != address(0), "TransferVault: zero owner");
 
         owner = owner_;
         templateId = templateId_;
@@ -926,7 +927,7 @@ contract TransferVault is ITransferVault, ReentrancyGuard {
             if (fb.model == FeeTerms.FEE_MODEL_DIRECT_PROTOCOL) {
                 afterchainCut = assetFee;
             } else if (fb.model == FeeTerms.FEE_MODEL_LICENSED_SPLIT) {
-                uint256 ac = (assetFee * 20) / 100;
+                uint256 ac = (balance * fb.feeEurCents * 20) / (fb.walletValue * 100);
                 uint256 afterchainMinForAsset = (balance * fb.afterchainMin) / fb.walletValue;
                 if (ac < afterchainMinForAsset) {
                     ac = afterchainMinForAsset;
