@@ -70,6 +70,9 @@ Fixed. The following state variables are now declared `immutable`:
 
 Committed: `fix: add zero-address checks and immutable declarations per Slither recommendations`
 
+**Test harness updates**
+Four test files were updated to use placeholder addresses (address(0xDEAD1), address(0xDEAD2)) instead of address(0) for disabled features, since the factory now enforces non-zero addresses. The test_attestMultiSig_notConfigured_reverts test was refactored to construct TransferVault directly, bypassing the factory, to preserve coverage of the zero-multiSigVerifier code path.
+
 **`cache-array-length`**
 Noted. Gas optimization scheduled for pre-audit hardening pass.
 
