@@ -1,5 +1,5 @@
 # Afterchain Protocol — Public Shell
-![Forge Tests](https://github.com/Afterchain/afterchain-protocol-public/actions/workflows/ci.yml/badge.svg)
+[![Forge Tests](https://github.com/Afterchain/afterchain-protocol-public/actions/workflows/ci.yml/badge.svg)](https://github.com/Afterchain/afterchain-protocol-public/actions)
 ![Coverage](https://img.shields.io/badge/coverage-85%25-brightgreen)
 
 **Public review edition.** This repository contains the on-chain
@@ -30,12 +30,29 @@ non-custodial invariant, oracle trust boundaries, jurisdiction
 binding, cross-chain replay protection, and integrator operational
 requirements.
 
+## The Book
+The protocol was developed alongside the first book dedicated to the crypto inheritance problem:
+
+**"Proof of Death: The Inheritance Layer of Web3"**
+by Mark J.F. Milczarek
+→ [amazon.com/dp/B0G1N1JKL3](https://www.amazon.com/dp/B0G1N1JKL3)
+
+## Patent
+The core architecture is protected under international patent application **PCT/IB2025/057151** (WIPO), covering the deterministic post-mortem execution mechanism for digital assets.
+
+## Security Audit
+This codebase has been analysed with [Slither](https://github.com/crytic/slither) (Trail of Bits static analyser):
+- docs/SLITHER_REPORT.txt — raw Slither output (94 findings)
+- docs/SLITHER_AUDIT_NOTES.md — annotated findings with disposition per category
+
+All Category 3 (high-impact actionable) findings have been resolved.
+
 ## What's in this repository
 
 ```
 packages/contracts/
   src/         — Solidity source (20 files)
-  test/        — Foundry regression tests (10 files)
+  test/        — Foundry regression tests (10 suites, 174 tests)
   foundry.toml — Foundry project config
   remappings.txt
 
@@ -43,6 +60,8 @@ docs/
   PUBLIC_SECURITY_MODEL.md   — public security model
   MPC_SETUP.md               — Groth16 trusted-setup ceremony guidance
   threat-model-quantum.md    — quantum-risk analysis
+  SLITHER_AUDIT_NOTES.md     — annotated Slither findings
+  SLITHER_REPORT.txt         — raw Slither output
 
 services/mock-verifier/
   index.ts                   — non-functional mock stub
@@ -78,6 +97,8 @@ forge install foundry-rs/forge-std
 forge test -vvv
 ```
 
+Expected output: **174 tests passed, 0 failed, 0 skipped.**
+
 The test suite exercises the state machine, attestation verifier,
 nullifier registry, fee-terms verifier, multi-sig attestation path,
 governance timelock, cross-chain replay protection, and jurisdiction
@@ -95,6 +116,11 @@ and security audits are permitted without a separate commercial
 agreement. Production use that generates execution revenue or
 third-party integration requires a commercial agreement with the
 licensor.
+
+## Links
+- Website: [afterchain.io](https://afterchain.io)
+- Book: [Proof of Death — The Inheritance Layer of Web3](https://www.amazon.com/dp/B0G1N1JKL3)
+- Contact: mark@afterchain.io
 
 ## Scope boundary
 
